@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy birthday to us</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '楷体', 'STKaiti', 'SimKaiti', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f0ff 0%, #e6e9ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: #5a3e36;
+            padding: 15px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b6b;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .falling-sparkle-bg {
+            position: absolute;
+            font-size: 18px;
+            color: gold;
+            opacity: 0;
+            animation: fallSparkleBg linear forwards;
+            text-shadow: 0 0 10px gold;
+        }
+        
+        .floating-balloon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.8;
+            animation: floatBalloon 15s ease-in-out infinite;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 3;
+        }
+        
+        h1 {
+            color: #e84393;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .birthday-girl {
+            font-size: 1.3rem;
+            color: #fd79a8;
+            margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .timezone-info {
+            background: rgba(253, 121, 168, 0.1);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-size: 0.9rem;
+            display: inline-block;
+            font-weight: 400;
+        }
+        
+        .poem-container {
+            width: 100%;
+            background: rgba(255, 245, 250, 0.7);
+            border-radius: 12px;
+            padding: 18px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(253, 121, 168, 0.2);
+        }
+        
+        .poem-title {
+            font-size: 1.2rem;
+            color: #e84393;
+            margin-bottom: 12px;
+            font-style: bold;
+            font-weight: 500;
+        }
+        
+        .poem {
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1rem;
+            color: #5d4037;
+            font-weight: 400;
+        }
+        
+        .poem p {
+            margin: 8px 0;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .poem p:nth-child(1) { animation-delay: 0.5s; }
+        .poem p:nth-child(2) { animation-delay: 1s; }
+        .poem p:nth-child(3) { animation-delay: 1.5s; }
+        .poem p:nth-child(4) { animation-delay: 2s; }
+        .poem p:nth-child(5) { animation-delay: 2.5s; }
+        .poem p:nth-child(6) { animation-delay: 3s; }
+        .poem p:nth-child(7) { animation-delay: 3.5s; }
+        .poem p:nth-child(8) { animation-delay: 4s; }
+        .poem p:nth-child(9) { animation-delay: 4.5s; }
+        .poem p:nth-child(10) { animation-delay: 5s; }
+        .poem p:nth-child(11) { animation-delay: 5.5s; }
+        .poem p:nth-child(12) { animation-delay: 6s; }
+        .poem p:nth-child(13) { animation-delay: 6.5s; }
+        .poem p:nth-child(14) { animation-delay: 7s; }
+        .poem p:nth-child(15) { animation-delay: 7.5s; }
+        .poem p:nth-child(16) { animation-delay: 8s; }
+        .poem p:nth-child(17) { animation-delay: 8.5s; }
+        .poem p:nth-child(18) { animation-delay: 9s; }
+        
+        .interactive-section {
+            margin: 20px 0;
+        }
+        
+        .love-button {
+            background: #e84393;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(232, 67, 147, 0.3);
+            margin: 8px;
+            width: 90%;
+            max-width: 280px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .love-button:active {
+            background: #fd79a8;
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(232, 67, 147, 0.4);
+        }
+        
+        .memory-box {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            text-align: left;
+            border-left: 3px solid #e84393;
+        }
+        
+        .memory-box ul {
+            padding-left: 20px;
+        }
+        
+        .memory-box li {
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-style: italic;
+            color: #777;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        @keyframes fallSparkleBg {
+            0% { 
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(180deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatBalloon {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 0.8;
+            }
+            90% { 
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .heart-rain {
+            position: fixed;
+            top: -50px;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+        
+        .falling-heart {
+            position: absolute;
+            font-size: 24px;
+            color: #ff6b6b;
+            animation: fall linear forwards;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+        }
+        
+        .falling-sparkle {
+            position: absolute;
+            font-size: 20px;
+            color: gold;
+            animation: fallSparkle linear forwards;
+            text-shadow: 0 0 10px gold;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        @keyframes fallSparkle {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        .firework-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: fireworkBurst 1s ease-out forwards;
+        }
+        
+        @keyframes fireworkBurst {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+        
+        /* 适配超小屏幕 */
+        @media (max-width: 360px) {
+            .container {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .birthday-girl {
+                font-size: 1.2rem;
+            }
+            
+            .poem-container {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation" id="background-animation"></div>
+    
+    <div class="container">
+        <div class="content">
+            <h1>🎂 生日快乐~亲爱的!！ 🎂</h1>
+            
+            <div class="birthday-girl">致我心中最美的月光</div>
+            
+            <div class="timezone-info">
+                ✨ 我站作彼岸的灯塔，每一道呼吸都为你明灭 ✨
+            </div>
+            
+            <div class="poem-container">
+                <div class="poem-title">望月的海 寄伊生辰</div>
+                <div class="poem">
+                    <p>我的思念是奔涌的洋流，</p>
+                    <p>而你是我星空上不息摇曳的月。</p>
+                    <p>我们相隔的晨昏被季风缝补，</p>
+                    <p>每个破晓都带着你眼睑的柔光。</p>
+                    <p>你生辰的烛火点燃我所有纬度，</p>
+                    <p>太平洋的浪花也未能沾湿这簇明亮。</p>
+                    <p>我拆解时差如同拆解玫瑰花瓣，</p>
+                    <p>每一瓣都落成你枕畔的星象。</p>
+                    <p>倘若寒潮暂驻你向阳的窗台，</p>
+                    <p>请记得我胸襟恒常生长的丛蔓。</p>
+                    <p>那里有无数候鸟衔着未启封的信笺，</p>
+                    <p>盘旋成永不降落的云纹印章。</p>
+                    <p>今夜我的脉动是越洋的暖流，</p>
+                    <p>环绕你足迹绘制的每道海岸线。</p>
+                    <p>当潮水在暗处写下光的誓言，</p>
+                    <p>我们便是同一张星图里</p>
+                    <p>互相映照的</p>
+                    <p>永恒坐标！</p>
+                </div>
+            </div>
+            
+            <div class="interactive-section">
+                <button class="love-button" id="promise-btn">我还想对你说＼(＾∀＾)ノ</button>
+                
+                <div class="memory-box" id="promise-box">
+                    <h3>我喜欢你</h3>
+                    <ul>
+                        <li>困难险阻无法阻挡坚定走向你的脚步</li>
+                        <li>我愿将余生所有偏爱与温柔赠予你</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <button class="love-button" id="heart-btn">送你好多小💖💖ヾ(≧O≦)〃~</button>
+            
+            <div class="footer">
+                <p>Nothing gona change my love for you</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 个性化设置
+        const girlfriendName = "小伊伊";
+        const myName = "小白";
+        
+        // 设置个性化内容
+        document.querySelectorAll('[id="girlfriend-name"]').forEach(el => {
+            el.textContent = girlfriendName;
+        });
+        document.querySelectorAll('[id="name-placeholder"]').forEach(el => {
+            el.textContent = girlfriendName;
+        });
+        document.querySelectorAll('[id="my-name"]').forEach(el => {
+            el.textContent = myName;
+        });
+        
+        // 创建浮动爱心装饰
+        function createFloatingHearts() {
+            const background = document.getElementById('background-animation');
+            
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '💖';
+                
+                // 随机位置和动画延迟
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const animationDelay = Math.random() * 5;
+                const animationDuration = 6 + Math.random() * 4;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.animationDelay = `${animationDelay}s`;
+                heart.style.animationDuration = `${animationDuration}s`;
+                
+                background.appendChild(heart);
+            }
+        }
+        
+        // 优化星星生成逻辑 - 防止堆积
+        let activeSparkles = 0;
+        const maxSparkles = 8; // 限制同时存在的星星数量
+        
+        function createFallingSparklesBg() {
+            const background = document.getElementById('background-animation');
+            
+            // 检查当前活跃的星星数量
+            if (activeSparkles >= maxSparkles) {
+                // 如果已经达到最大数量，延迟创建
+                setTimeout(createFallingSparklesBg, 1000);
+                return;
+            }
+            
+            // 创建新星星
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('falling-sparkle-bg');
+            sparkle.innerHTML = '✨';
+            
+            // 随机位置和动画
+            const left = Math.random() * 100;
+            const animationDuration = 4 + Math.random() * 3; // 加快下落速度：4-7秒
+            const animationDelay = Math.random() * 5; // 减少延迟：0-5秒
+            
+            sparkle.style.left = `${left}%`;
+            sparkle.style.animationDuration = `${animationDuration}s`;
+            sparkle.style.animationDelay = `${animationDelay}s`;
+            
+            background.appendChild(sparkle);
+            activeSparkles++;
+            
+            // 动画结束后移除星星并减少计数
+            setTimeout(() => {
+                if (sparkle.parentNode === background) {
+                    background.removeChild(sparkle);
+                    activeSparkles--;
+                }
+            }, (animationDuration + animationDelay) * 1000);
+            
+            // 延迟创建下一个星星，控制生成频率
+            const nextDelay = 1000 + Math.random() * 2000; // 1-3秒后创建下一个
+            setTimeout(createFallingSparklesBg, nextDelay);
+        }
+        
+        // 创建浮动气球装饰
+        function createFloatingBalloons() {
+            const background = document.getElementById('background-animation');
+            const balloonColors = ['🎈', '🎈', '🌈', '🎈', '🌈', '🎈', '🎈', '🌈', '🎈'];
+            
+            for (let i = 0; i < 8; i++) {
+                const balloon = document.createElement('div');
+                balloon.classList.add('floating-balloon');
+                balloon.innerHTML = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                
+                // 随机位置和动画延迟
+                const left = Math.random() * 100;
+                const animationDelay = Math.random() * 20;
+                const animationDuration = 15 + Math.random() * 10;
+                
+                balloon.style.left = `${left}%`;
+                balloon.style.animationDelay = `${animationDelay}s`;
+                balloon.style.animationDuration = `${animationDuration}s`;
+                
+                background.appendChild(balloon);
+            }
+        }
+        
+        // 创建爱心雨容器
+        function createHeartRain() {
+            const heartRain = document.createElement('div');
+            heartRain.classList.add('heart-rain');
+            document.body.appendChild(heartRain);
+            return heartRain;
+        }
+        
+        // 创建下落爱心
+        function createFallingHeart(container) {
+            const heart = document.createElement('div');
+            heart.classList.add('falling-heart');
+            heart.innerHTML = '💖';
+            
+            // 随机位置和动画
+            const left = Math.random() * 100;
+            const animationDuration = 2 + Math.random() * 2; // 加快下落速度
+            
+            heart.style.left = `${left}%`;
+            heart.style.animationDuration = `${animationDuration}s`;
+            
+            container.appendChild(heart);
+            
+            // 动画结束后移除爱心
+            setTimeout(() => {
+                if (heart.parentNode === container) {
+                    container.removeChild(heart);
+                }
+            }, animationDuration * 1000);
+            
+            return heart;
+        }
+        
+        // 创建下落星星
+        function createFallingSparkle(container) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('falling-sparkle');
+            sparkle.innerHTML = '✨';
+            
+            // 随机位置和动画
+            const left = Math.random() * 100;
+            const animationDuration = 2 + Math.random() * 2; // 加快下落速度
+            
+            sparkle.style.left = `${left}%`;
+            sparkle.style.animationDuration = `${animationDuration}s`;
+            
+            container.appendChild(sparkle);
+            
+            // 动画结束后移除星星
+            setTimeout(() => {
+                if (sparkle.parentNode === container) {
+                    container.removeChild(sparkle);
+                }
+            }, animationDuration * 1000);
+            
+            return sparkle;
+        }
+        
+        // 控制爱心雨的状态
+        let heartRainActive = false;
+        let heartRainInterval;
+        let heartRainContainer;
+        
+        // 开始爱心雨
+        function startHeartRain() {
+            if (heartRainActive) return;
+            
+            heartRainActive = true;
+            
+            // 创建爱心雨容器（如果不存在）
+            if (!heartRainContainer) {
+                heartRainContainer = createHeartRain();
+            }
+            
+            // 清除之前的爱心雨
+            clearInterval(heartRainInterval);
+            
+            // 创建爱心雨
+            heartRainInterval = setInterval(() => {
+                if (heartRainActive) {
+                    // 每次创建3个爱心和1个星星
+                    for (let i = 0; i < 3; i++) {
+                        createFallingHeart(heartRainContainer);
+                    }
+                    for (let i = 0; i <1; i++) {
+                        createFallingSparkle(heartRainContainer);
+                    }
+                }
+            }, 300);
+        }
+        
+        // 停止爱心雨
+        function stopHeartRain() {
+            heartRainActive = false;
+            clearInterval(heartRainInterval);
+        }
+        
+        // 创建烟花效果
+        function createFirework(x, y) {
+            const colors = ['#ff6b6b', '#e84393', '#fd79a8', '#ff9ff3', '#f368e0', '#ffd700', '#a29bfe', '#74b9ff'];
+            const particles = 40;
+            const container = document.createElement('div');
+            container.classList.add('firework-container');
+            document.body.appendChild(container);
+            
+            for (let i = 0; i < particles; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                
+                // 随机颜色
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.background = color;
+                firework.style.boxShadow = `0 0 5px ${color}, 0 0 10px ${color}`;
+                
+                // 随机方向
+                const angle = (Math.PI * 2 * i) / particles;
+                const distance = Math.random() * 100 + 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                firework.style.setProperty('--tx', `${tx}px`);
+                firework.style.setProperty('--ty', `${ty}px`);
+                
+                firework.style.left = `${x}px`;
+                firework.style.top = `${y}px`;
+                
+                container.appendChild(firework);
+                
+                // 动画结束后移除
+                setTimeout(() => {
+                    if (firework.parentNode === container) {
+                        container.removeChild(firework);
+                    }
+                }, 1000);
+            }
+            
+            // 移除容器
+            setTimeout(() => {
+                if (container.parentNode) {
+                    container.parentNode.removeChild(container);
+                }
+            }, 1000);
+        }
+        
+        // 点击屏幕任意位置触发烟花效果
+        document.addEventListener('click', function(e) {
+            // 阻止按钮点击触发烟花
+            if (e.target.classList.contains('love-button')) {
+                return;
+            }
+            
+            createFirework(e.clientX, e.clientY);
+            
+            // 如果爱心雨正在播放，则停止
+            if (heartRainActive) {
+                stopHeartRain();
+            }
+        });
+        
+        // 触摸事件支持
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            
+            // 阻止按钮点击触发烟花
+            if (e.target.classList.contains('love-button')) {
+                return;
+            }
+            
+            createFirework(touch.clientX, touch.clientY);
+            
+            // 如果爱心雨正在播放，则停止
+            if (heartRainActive) {
+                stopHeartRain();
+            }
+        }, {passive: true});
+        
+        // 按钮交互功能
+        document.getElementById('promise-btn').addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡，避免触发烟花效果
+            const promiseBox = document.getElementById('promise-box');
+            
+            if (promiseBox.style.display === 'block') {
+                promiseBox.style.display = 'none';
+            } else {
+                promiseBox.style.display = 'block';
+            }
+            
+            // 按钮点击效果
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+        
+        document.getElementById('heart-btn').addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡，避免触发烟花效果
+            
+            // 开始爱心雨
+            startHeartRain();
+            
+            // 按钮点击效果
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+            
+            // 显示祝福语
+            alert(`${girlfriendName}，🎂生日快乐呀！纵隔两万里，我心永相依！ 💖`);
+        });
+        
+        // 初始化
+        createFloatingHearts();
+        createFallingSparklesBg(); // 启动星星生成
+        createFloatingBalloons();
+        
+        // 添加触摸事件支持
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    </script>
+</body>
+</html>
